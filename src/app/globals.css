@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+@theme {
+  --color-mn-canvas: #FFF9F6;
+  --color-mn-blush: #FBEDEA;
+  --color-mn-petal: #F3C7CE;
+  --color-mn-rose: #D9728F;
+  --color-mn-rose-deep: #B23A5C;
+  --color-mn-rose-ink: #8F2744;
+  --color-mn-ink: #2B1F24;
+  --color-mn-ink-soft: #6E5A60;
+  --color-mn-border: #EAD7D5;
+  --color-mn-border-strong: #8C7077;
+  --color-mn-night: #2A1A24;
+  --color-mn-moon: #C8A96A;
+  --color-mn-success: #2E7D5B;
+  --color-mn-error: #B3261E;
+  --color-mn-warn-bg: #FFF3D6;
+  --color-mn-warn-ink: #7A5200;
+
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-dm-sans);
+
+  --radius-input: 0.75rem;
+  --radius-card: 1.25rem;
+  --radius-media: 1.5rem;
+
+  --shadow-1: 0 1px 2px rgba(43,31,36,.06);
+  --shadow-2: 0 8px 24px rgba(43,31,36,.08);
+  --shadow-3: 0 24px 64px rgba(43,31,36,.16);
+
+  --glass-bg: rgba(255, 249, 246, 0.72);
+  --glass-border: rgba(140, 112, 119, 0.18);
+  --glass-shadow: 0 8px 32px rgba(43, 31, 36, 0.12);
+}
+
+@layer base {
+  html {
+    background-color: var(--color-mn-canvas);
+    color: var(--color-mn-ink);
+  }
+
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+
+    &[data-cart-open] {
+      overflow: hidden;
+    }
+
+    &[data-mobile-menu-open] {
+      overflow: hidden;
+    }
+  }
+
+  ::selection {
+    background-color: var(--color-mn-blush);
+    color: var(--color-mn-ink);
+  }
+}
+
+@keyframes slide-in {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes menu-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-safe\:animate-\[slide-in_250ms_ease-out\],
+  .motion-safe\:animate-\[fade_200ms_ease-out\],
+  .motion-safe\:animate-\[menu-slide-down_240ms_ease-out\],
+  .motion-safe\:animate-\[reveal-up_600ms_ease-out\] {
+    animation: none;
+  }
+
+  .reveal-target {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Reveal progressive enhancement */
+.reveal-target {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.reveal-target.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 600ms ease-out, transform 600ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-target {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Glass utilities */
+.glass {
+  background-color: var(--glass-bg);
+  backdrop-filter: saturate(180%) blur(16px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+@supports not (backdrop-filter: blur(16px)) {
+  .glass {
+    background-color: var(--color-mn-canvas);
+    border: 1px solid var(--color-mn-border);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    background-color: var(--color-mn-canvas);
+    border: 1px solid var(--color-mn-border);
+    backdrop-filter: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .glass {
+    background-color: Canvas;
+    border: 1px solid CanvasText;
+    backdrop-filter: none;
+  }
+}
