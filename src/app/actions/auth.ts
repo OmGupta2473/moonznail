@@ -2,6 +2,7 @@
 
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 
 export async function signInWithOtp(formData: FormData) {
   const email = formData.get("email")?.toString().trim();
@@ -11,7 +12,12 @@ export async function signInWithOtp(formData: FormData) {
   }
 
   const supabase = await createServerSupabaseClient();
-  const origin = "http://localhost:3000";
+  
+  // Dynamically get the origin (localhost:3000 or your vercel domain)
+  const headersList = await headers();
+  const host = headersList.get("host") || "localhost:3000";
+  const protocol = host.includes("localhost") ? "http" : "https";
+  const origin = `${protocol}://${host}`;
 
   const { error } = await supabase.auth.signInWithOtp({
     email,
