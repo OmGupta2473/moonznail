@@ -12,7 +12,7 @@ export function ProductGallery({ media, isFixture }: { media: ProductMedia[]; is
 
   if (!media || media.length === 0) {
     return (
-      <div className="aspect-[4/5] lg:aspect-auto lg:h-[80vh] w-full rounded-2xl lg:rounded-r-none overflow-hidden bg-mn-blush">
+      <div className="aspect-[4/5] lg:aspect-auto lg:h-[80vh] w-full rounded-lg lg:rounded-r-none overflow-hidden bg-mn-blush">
          <MediaImage media={undefined} isFixture={isFixture} className="h-full w-full" />
       </div>
     );
@@ -55,7 +55,7 @@ export function ProductGallery({ media, isFixture }: { media: ProductMedia[]; is
     <div className="flex flex-col gap-4">
       {/* Main Viewer */}
       <div 
-        className="relative aspect-[4/5] lg:aspect-auto lg:h-[80vh] w-full rounded-2xl lg:rounded-r-none overflow-hidden bg-mn-canvas focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mn-rose-ink"
+        className="relative aspect-[4/5] lg:aspect-auto lg:h-[80vh] w-full rounded-lg lg:rounded-r-none overflow-hidden bg-mn-canvas focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mn-rose-ink"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
         onKeyDown={handleKeyDown}
@@ -110,7 +110,7 @@ export function ProductGallery({ media, isFixture }: { media: ProductMedia[]; is
                 {thumbIsVideo ? (
                   <div className="flex h-full w-full items-center justify-center bg-mn-ink text-mn-canvas text-xs">Video</div>
                 ) : (
-                  <MediaImage media={m} isFixture={isFixture} className="h-full w-full object-cover" />
+                  <MediaImage media={m} isFixture={isFixture} className="h-full w-full object-cover rounded-lg" />
                 )}
               </button>
             );

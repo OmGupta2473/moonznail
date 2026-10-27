@@ -5,9 +5,9 @@ import { LookCardData } from "@/components/catalogue/look-card-data";
 import { ServiceCardData } from "@/components/catalogue/service-card-data";
 import { DevelopmentBanner } from "@/components/catalogue/development-banner";
 import { getProducts, getLooks, getServices } from "@/lib/catalogue/queries";
-import { PlaceholderMedia } from "@/components/ui/placeholder-media";
 import { Reveal } from "@/components/ui/reveal";
 import { Carousel } from "@/components/ui/carousel";
+import { ArtistCarousel } from "@/components/catalogue/artist-carousel";
 
 export const dynamic = "force-dynamic";
 export const metadata = { robots: { index: false, follow: false } };
@@ -66,7 +66,7 @@ export default async function HomePage() {
       {/* Original Hero Section */}
       <section className="relative overflow-hidden pb-10 pt-6 lg:pb-16 lg:pt-10">
         <Container>
-          <div className="grid grid-cols-12 gap-6 lg:gap-8 items-center">
+                <div className="grid grid-cols-12 gap-8 items-stretch relative">
             <div className="col-span-12 lg:col-span-5 relative z-10">
               <p className="hero-enter text-[13px] font-medium uppercase tracking-[0.16em] text-mn-rose-deep">
                 Independent nail artist
@@ -75,7 +75,7 @@ export default async function HomePage() {
                 Nail art, made <span className="italic text-mn-rose-deep">by hand</span>.
               </h1>
               <p className="hero-enter hero-enter-delay-2 mt-6 max-w-md text-[1.125rem] leading-7 text-mn-ink-soft">
-                Press-on sets and nail services by [Artist name]. A small studio practice, made slowly and finished by hand.
+                Press-on sets and nail services by Nisha Gupta. A small studio practice, made slowly and finished by hand.
               </p>
               <div className="hero-enter hero-enter-delay-3 mt-8 flex flex-col gap-3 sm:flex-row">
                 <ButtonLink href="/shop">Shop sets</ButtonLink>
@@ -86,12 +86,9 @@ export default async function HomePage() {
               </div>
             </div>
 
-            <div className="col-span-12 lg:col-span-7 relative lg:-mr-12 xl:-mr-24">
+            <div className="col-span-12 relative z-0 lg:col-span-7 lg:col-start-6 lg:row-start-1 lg:mt-0 h-full">
               <div className="hero-image-enter relative aspect-[4/5] lg:aspect-auto lg:h-[65vh] lg:max-h-[700px] overflow-hidden rounded-[2rem] lg:rounded-l-[2rem] lg:rounded-r-none shadow-float">
-                <PlaceholderMedia
-                  className="absolute inset-0 h-full w-full"
-                  label="Hero photography pending"
-                />
+                <ArtistCarousel />
                 <div
                   aria-hidden="true"
                   className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-mn-canvas/90 to-transparent"

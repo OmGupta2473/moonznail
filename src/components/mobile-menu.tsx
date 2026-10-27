@@ -16,27 +16,23 @@ export function MobileMenu() {
   const [mounted, setMounted] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const wasOpen = useRef(false);
 
-  // Only render portal after hydration
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
-  // Handle Escape key to close
+  // Escape to close
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) {
-        setIsOpen(false);
-      }
+      if (e.key === "Escape" && isOpen) setIsOpen(false);
     };
-    if (isOpen) {
-      document.addEventListener("keydown", handleKeyDown);
-    }
+    if (isOpen) document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isOpen]);
 
-  // Lock body scroll when open
+  // Scroll lock
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -48,13 +44,14 @@ export function MobileMenu() {
     };
   }, [isOpen]);
 
-  // Focus trap and restore focus on close
+  // Focus management
   useEffect(() => {
     if (!isOpen) {
-      // Restore focus to trigger button when menu closes
-      triggerRef.current?.focus();
+      if (wasOpen.current) triggerRef.current?.focus();
+      wasOpen.current = false;
       return;
     }
+    wasOpen.current = true;
 
     const menu = menuRef.current;
     if (!menu) return;
@@ -62,8 +59,7 @@ export function MobileMenu() {
     const focusables = Array.from(
       menu.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')
     );
-
-    // Focus the first link (or close button) when opened
+    
     focusables[0]?.focus();
 
     const handleTab = (e: KeyboardEvent) => {
@@ -85,49 +81,46 @@ export function MobileMenu() {
     return () => document.removeEventListener("keydown", handleTab);
   }, [isOpen]);
 
-  // Handle close on navigation
-
   const menuContent = (
-    <div
-      ref={menuRef}
-      className={`fixed inset-0 z-50 flex flex-col bg-mn-canvas w-full h-full transition-all duration-300 ease-in-out ${
-        isOpen ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-4 pointer-events-none"
-      }`}
-      role="dialog"
-      aria-modal="true"
-      aria-label="Mobile navigation"
-      aria-hidden={!isOpen}
-    >
-      {/* Top Bar */}
-      <div className="flex h-16 items-center justify-between px-5 sm:px-8 border-b border-mn-border">
-        <Link
-          href="/"
-          onClick={() => setIsOpen(false)}
-          className="font-display text-xl tracking-tight"
-        >
-          MoonzNails
-        </Link>
-        <button
-          type="button"
-          onClick={() => setIsOpen(false)}
-          aria-label="Close menu"
-          className="flex h-11 w-11 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mn-rose-ink"
-        >
-          <svg aria-hidden="true" viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
-      </div>
+    // FIXED: Added pointer-events-none when closed to stop it blocking the page
+    <div className={`fixed inset-0 z-[100] flex justify-end ${isOpen ? "pointer-events-auto" : "pointer-events-none"}`}>
+      
+      {/* Backdrop */}
+      <div 
+        className={`absolute inset-0 bg-mn-ink/30 backdrop-blur-sm transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0"}`}
+        onClick={() => setIsOpen(false)}
+        aria-hidden="true"
+      />
 
-      {/* Navigation Links */}
-      <div className="flex-1 overflow-y-auto px-5 py-12 sm:px-8">
-        <nav aria-label="Mobile primary">
-          <ul className="flex flex-col gap-8">
-            {nav.map((item, i) => (
-              <li key={item.href} className="animate-menu-link" style={{ animationDelay: `${i * 50}ms` }}>
+      {/* Slide-out Panel */}
+      <div
+        ref={menuRef}
+        className={`relative flex h-full w-4/5 max-w-sm flex-col bg-mn-canvas shadow-2xl transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Mobile navigation"
+      >
+        <div className="flex h-14 items-center justify-between border-b border-mn-border px-5">
+          <span className="font-display text-lg tracking-tight">Menu</span>
+          <button
+            type="button"
+            onClick={() => setIsOpen(false)}
+            aria-label="Close menu"
+            className="flex h-11 w-11 items-center justify-center rounded-full hover:bg-mn-blush focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mn-rose-ink"
+          >
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        </div>
+
+        <nav className="flex-1 overflow-y-auto px-2 py-4">
+          <ul className="flex flex-col">
+            {nav.map((item) => (
+              <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="block font-display text-4xl text-mn-ink hover:text-mn-rose-deep transition-colors"
+                  className="block rounded-lg px-4 py-4 font-display text-2xl text-mn-ink hover:bg-mn-blush hover:text-mn-rose-deep transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
                   {item.label}
@@ -149,17 +142,11 @@ export function MobileMenu() {
         aria-controls="mobile-menu"
         aria-label={isOpen ? "Close menu" : "Open menu"}
         className="lg:hidden inline-flex min-h-11 min-w-11 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mn-rose-ink focus-visible:ring-offset-2 focus-visible:ring-offset-mn-canvas"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setIsOpen(true)}
       >
-        {isOpen ? (
-          <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        ) : (
-          <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <path d="M4 6h16M4 12h16M4 18h16" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        )}
+        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path d="M4 6h16M4 12h16M4 18h16" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
       </button>
 
       {mounted && createPortal(menuContent, document.body)}

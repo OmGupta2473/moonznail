@@ -35,8 +35,8 @@ export default async function ProductPage({
   const price = formatPrice(product.priceMinor, product.currency);
 
   return (
-    <main id="main" className="pt-6 pb-16 lg:pt-8 lg:pb-24">
-      <div className="mx-auto max-w-[1600px]">
+    <main id="main" className="pt-6 pb-0 lg:pt-8 lg:pb-24 relative flex min-h-[calc(100vh-4rem)] flex-col">
+      <div className="mx-auto max-w-[1600px] flex-1">
         {product.isFixture && <Container><DevelopmentBannerInline /></Container>}
         
         <div className="grid lg:grid-cols-[1fr_1.1fr] gap-8 lg:gap-12 items-start">
@@ -52,7 +52,7 @@ export default async function ProductPage({
               <h1 className="font-display text-4xl tracking-tight lg:text-6xl">
                 {product.name}
               </h1>
-              <p className="mt-4 text-xl text-mn-ink-soft">{price ?? "Price on request"}</p>
+              <p className="mt-4 text-xl text-mn-rose-deep">{price ?? "Price on request"}</p>
 
               {/* Meta Chips */}
               <div className="mt-8 flex flex-wrap gap-2">
@@ -114,11 +114,11 @@ export default async function ProductPage({
       </div>
       
       {/* Sticky Mobile CTA */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-mn-border bg-mn-canvas p-4 lg:hidden">
+      <div className="sticky bottom-0 left-0 right-0 z-40 border-t border-mn-border bg-mn-canvas p-4 lg:hidden mt-auto">
         <div className="flex items-center justify-between gap-4">
           <div>
             <p className="font-medium">{product.name}</p>
-            <p className="text-sm">{price}</p>
+            <p className="text-sm text-mn-rose-deep">{price}</p>
           </div>
           <div className="w-1/2">
             <AddToCartButton productId={product.id} />

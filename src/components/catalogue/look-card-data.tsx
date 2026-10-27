@@ -18,7 +18,7 @@ export function LookCardData({ look, className }: { look: Look; className?: stri
     >
       <div className="relative">
         {isVideo ? (
-          <div className="aspect-[4/5] rounded-xl overflow-hidden bg-mn-blush">
+          <div className="aspect-[4/5] rounded-lg overflow-hidden bg-mn-blush">
             <video
               src={primaryMedia.storagePath!}
               autoPlay
@@ -32,7 +32,7 @@ export function LookCardData({ look, className }: { look: Look; className?: stri
           <MediaImage
             media={primaryMedia}
             isFixture={look.isFixture}
-            className="aspect-[4/5] rounded-xl shadow-rest motion-safe:transition-transform motion-safe:group-hover:-translate-y-1"
+            className="aspect-[4/5] rounded-lg shadow-rest motion-safe:transition-transform motion-safe:group-hover:-translate-y-1"
           />
         )}
         {look.isFixture && (

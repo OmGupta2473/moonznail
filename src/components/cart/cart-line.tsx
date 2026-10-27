@@ -5,8 +5,9 @@ import { useCart } from "./cart-context";
 import { formatPrice } from "@/lib/format";
 import { MediaImage } from "@/components/catalogue/media-image";
 import type { CartLine } from "@/lib/cart/types";
+import { cn } from "@/lib/cn";
 
-export function CartLineRow({ line }: { line: CartLine }) {
+export function CartLineRow({ line, className }: { line: CartLine; className?: string }) {
   const { updateQuantity, removeFromCart } = useCart();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -29,7 +30,7 @@ export function CartLineRow({ line }: { line: CartLine }) {
       : "Unavailable";
 
   return (
-    <div className={`flex gap-4 py-4 ${isUnavailable ? "opacity-70" : ""}`}>
+    <div className={cn(`flex gap-4 py-4 ${isUnavailable ? "opacity-70" : ""}`, className)}>
       <div className="w-20 shrink-0">
         <MediaImage
           media={line.imagePath ? { storagePath: line.imagePath, altText: line.name, width: null, height: null } : undefined}
@@ -47,7 +48,7 @@ export function CartLineRow({ line }: { line: CartLine }) {
           ) : (
             <span className="text-sm font-medium">{line.name}</span>
           )}
-          <span className="text-sm tabular-nums">{priceLabel}</span>
+          <span className="text-sm tabular-nums text-mn-rose-deep">{priceLabel}</span>
         </div>
         {isUnavailable && (
           <p className="text-xs text-mn-ink-soft">

@@ -58,11 +58,17 @@ export function CartDrawer() {
           {cart.items.length === 0 ? (
             <p className="py-12 text-center text-sm text-mn-ink-soft">Your cart is empty.</p>
           ) : (
-            cart.items.map((line) => <CartLineRow key={line.productId} line={line} />)
+            <>
+              {cart.items.map((line, index) => (
+                <div key={line.productId} className="animate-drawer-item" style={{ animationDelay: `${index * 50}ms` }}>
+                  <CartLineRow line={line} />
+                </div>
+              ))}
+            </>
           )}
         </div>
         {cart.items.length > 0 && (
-          <div className="border-t border-mn-border px-5 py-4">
+          <div className="border-t border-mn-border px-5 py-4 animate-drawer-item" style={{ animationDelay: `${cart.items.length * 50}ms` }}>
             <CartSubtotal cart={cart} />
             <Link href="/cart" onClick={closeDrawer} className="mt-3 block text-center text-xs text-mn-ink-soft underline underline-offset-4">
               View full cart

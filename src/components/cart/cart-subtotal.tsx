@@ -10,7 +10,7 @@ export function CartSubtotal({ cart }: { cart: CartView }) {
           Some items are unavailable and are not included in the total.
         </p>
       )}
-      <div className="flex items-center justify-between text-lg font-medium">
+      <div className="flex items-center justify-between text-lg font-medium text-mn-rose-deep">
         <span>Subtotal</span>
         <span className="tabular-nums">{sub}</span>
       </div>

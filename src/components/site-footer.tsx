@@ -28,7 +28,7 @@ export function SiteFooter() {
           <div className="lg:col-span-5">
             <p className="font-display text-2xl">MoonzNails</p>
             <p className="mt-3 max-w-sm text-sm leading-6 text-mn-canvas/70">
-              Development preview. Nail art by [Artist name]. Placeholder content — not final products, prices, or policies.
+              Development preview. Nail art by Nisha Gupta. Placeholder content — not final products, prices, or policies.
             </p>
           </div>
           {groups.map((group) => (

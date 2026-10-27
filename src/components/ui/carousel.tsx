@@ -102,7 +102,7 @@ export function Carousel({
 
       <div
         ref={scrollRef}
-        className="flex gap-2 sm:gap-3 lg:gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory px-5 sm:px-8 lg:px-12 pb-4"
+        className="flex gap-2 sm:gap-3 lg:gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory scroll-px-5 sm:scroll-px-8 lg:scroll-px-12 px-5 sm:px-8 lg:px-12 pb-4"
       >
         {Children.map(children, (child, index) => (
           <div

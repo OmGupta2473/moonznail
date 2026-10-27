@@ -58,6 +58,8 @@ export function CheckoutForm({ cart }: { cart: CartView }) {
     });
   }
 
+
+
   return (
     <div className="mx-auto max-w-5xl">
       <h1 className="font-display text-4xl tracking-tight lg:text-5xl">Checkout</h1>
@@ -125,11 +127,11 @@ export function CheckoutForm({ cart }: { cart: CartView }) {
             {cart.items.map((i) => (
               <div key={i.productId} className="flex justify-between pt-4 text-sm">
                 <span className="text-mn-ink-soft">{i.quantity} × {i.name}</span>
-                <span className="tabular-nums">{formatPrice((i.unitPriceMinor ?? 0) * i.quantity, i.currency) ?? "—"}</span>
+                <span className="tabular-nums text-mn-rose-deep">{formatPrice((i.unitPriceMinor ?? 0) * i.quantity, i.currency) ?? "—"}</span>
               </div>
             ))}
           </div>
-          <div className="mt-6 border-t border-mn-border pt-4 flex justify-between text-lg font-medium">
+          <div className="mt-6 border-t border-mn-border pt-4 flex justify-between text-lg font-medium text-mn-rose-deep">
             <span>Subtotal</span>
             <span className="tabular-nums">{formatPrice(cart.subtotalMinor, cart.currency) ?? "₹0"}</span>
           </div>

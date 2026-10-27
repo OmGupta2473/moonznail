@@ -7,8 +7,8 @@ export const metadata = {
 export default function AboutPage() {
   return (
     <PlaceholderPage
-      title="About"
-      description="Artist biography and process content will be implemented in a later task."
+      title="About Nisha Gupta"
+      description="Nisha Gupta is an independent nail artist based in [City]. Her work combines traditional techniques with modern designs, creating hand-painted press-on nails that are made to order."
     />
   );
 }

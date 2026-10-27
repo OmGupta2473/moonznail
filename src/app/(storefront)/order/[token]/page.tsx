@@ -71,10 +71,10 @@ export default async function OrderPage({ params }: { params: Promise<{ token: s
               {orderItems.map((item) => (
                 <div key={item.id} className="flex justify-between text-sm">
                   <span className="text-mn-ink-soft">{item.quantity} × {item.product_name}</span>
-                  <span className="tabular-nums">{formatPrice(item.line_total_minor, order.currency)}</span>
+                  <span className="tabular-nums text-mn-rose-deep">{formatPrice(item.line_total_minor, order.currency)}</span>
                 </div>
               ))}
-              <div className="border-t border-mn-border pt-4 flex justify-between text-lg font-medium">
+              <div className="border-t border-mn-border pt-4 flex justify-between text-lg font-medium text-mn-rose-deep">
                 <span>Total</span>
                 <span className="tabular-nums">{formatPrice(order.total_minor, order.currency)}</span>
               </div>
