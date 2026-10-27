@@ -62,7 +62,7 @@ export function MobileMenu() {
     const focusables = Array.from(
       menu.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')
     );
-    
+
     // Focus the first link (or close button) when opened
     focusables[0]?.focus();
 
@@ -85,24 +85,24 @@ export function MobileMenu() {
     return () => document.removeEventListener("keydown", handleTab);
   }, [isOpen]);
 
-  // Handle close on navigation (only works if clicking a link doesn't unmount instantly)
-  const handleNavClick = () => {
-    setIsOpen(false);
-  };
+  // Handle close on navigation
 
   const menuContent = (
     <div
       ref={menuRef}
-      className="fixed inset-0 z-50 flex flex-col bg-mn-canvas animate-menu w-full h-full"
+      className={`fixed inset-0 z-50 flex flex-col bg-mn-canvas w-full h-full transition-all duration-300 ease-in-out ${
+        isOpen ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-4 pointer-events-none"
+      }`}
       role="dialog"
       aria-modal="true"
       aria-label="Mobile navigation"
+      aria-hidden={!isOpen}
     >
       {/* Top Bar */}
       <div className="flex h-16 items-center justify-between px-5 sm:px-8 border-b border-mn-border">
         <Link
           href="/"
-          onClick={handleNavClick}
+          onClick={() => setIsOpen(false)}
           className="font-display text-xl tracking-tight"
         >
           MoonzNails
@@ -128,7 +128,7 @@ export function MobileMenu() {
                 <Link
                   href={item.href}
                   className="block font-display text-4xl text-mn-ink hover:text-mn-rose-deep transition-colors"
-                  onClick={handleNavClick}
+                  onClick={() => setIsOpen(false)}
                 >
                   {item.label}
                 </Link>
@@ -149,14 +149,20 @@ export function MobileMenu() {
         aria-controls="mobile-menu"
         aria-label={isOpen ? "Close menu" : "Open menu"}
         className="lg:hidden inline-flex min-h-11 min-w-11 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mn-rose-ink focus-visible:ring-offset-2 focus-visible:ring-offset-mn-canvas"
-        onClick={() => setIsOpen(true)}
+        onClick={() => setIsOpen(!isOpen)}
       >
-        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5">
-          <path d="M4 6h16M4 12h16M4 18h16" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+        {isOpen ? (
+          <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ) : (
+          <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path d="M4 6h16M4 12h16M4 18h16" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        )}
       </button>
 
-      {mounted && isOpen && createPortal(menuContent, document.body)}
+      {mounted && createPortal(menuContent, document.body)}
     </>
   );
 }

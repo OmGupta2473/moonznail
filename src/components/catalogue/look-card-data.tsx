@@ -5,40 +5,45 @@ import { Look } from "@/lib/catalogue/types";
 import { cn } from "@/lib/cn";
 
 export function LookCardData({ look, className }: { look: Look; className?: string }) {
+  const primaryMedia = look.media[0];
+  const isVideo = primaryMedia?.storagePath?.endsWith(".mp4");
+
   return (
     <Link
       href={`/looks/${look.slug}`}
       className={cn(
-        "group block rounded-3xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mn-rose-ink focus-visible:ring-offset-2 focus-visible:ring-offset-mn-canvas",
+        "group block focus-visible:outline-none",
         className
       )}
     >
       <div className="relative">
-        <MediaImage
-          media={look.media[0]}
-          isFixture={look.isFixture}
-          className="aspect-[4/5] rounded-3xl shadow-1 motion-safe:transition-transform motion-safe:group-hover:-translate-y-1"
-        />
+        {isVideo ? (
+          <div className="aspect-[4/5] rounded-xl overflow-hidden bg-mn-blush">
+            <video
+              src={primaryMedia.storagePath!}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="h-full w-full object-cover"
+            />
+          </div>
+        ) : (
+          <MediaImage
+            media={primaryMedia}
+            isFixture={look.isFixture}
+            className="aspect-[4/5] rounded-xl shadow-rest motion-safe:transition-transform motion-safe:group-hover:-translate-y-1"
+          />
+        )}
         {look.isFixture && (
           <div className="absolute left-3 top-3">
             <FixtureBadge />
           </div>
         )}
       </div>
-      <div className="mt-4 space-y-2">
-        <h3 className="text-base font-medium leading-6">{look.title}</h3>
-        {look.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1">
-            {look.tags.slice(0, 3).map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full bg-mn-blush px-2 py-1 text-xs text-mn-ink-soft"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
+      <div className="mt-2 space-y-0.5">
+        <h3 className="text-[15px] font-medium leading-tight truncate">{look.title}</h3>
+        <p className="text-[13px] text-mn-ink-soft truncate">{look.tags.slice(0, 2).join(" · ")}</p>
       </div>
     </Link>
   );

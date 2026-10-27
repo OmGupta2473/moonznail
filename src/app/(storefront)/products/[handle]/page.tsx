@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation";
 import { Container } from "@/components/ui/container";
-import { MediaImage } from "@/components/catalogue/media-image";
 import { DevelopmentBannerInline } from "@/components/catalogue/development-banner-inline";
 import { formatPrice } from "@/lib/format";
 import { getProductBySlug } from "@/lib/catalogue/queries";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
+import { BuyNowButton } from "@/components/cart/buy-now-button";
+import { ProductGallery } from "@/components/catalogue/product-gallery";
 import { Reveal } from "@/components/ui/reveal";
 
 export const dynamic = "force-dynamic";
@@ -34,41 +35,19 @@ export default async function ProductPage({
   const price = formatPrice(product.priceMinor, product.currency);
 
   return (
-    <main id="main" className="py-12 lg:py-24">
+    <main id="main" className="pt-6 pb-16 lg:pt-8 lg:pb-24">
       <div className="mx-auto max-w-[1600px]">
         {product.isFixture && <Container><DevelopmentBannerInline /></Container>}
         
-        <div className="grid lg:grid-cols-[1fr_1.1fr] gap-12 lg:gap-24 items-start">
+        <div className="grid lg:grid-cols-[1fr_1.1fr] gap-8 lg:gap-12 items-start">
           
           {/* Image Column - Bleeds right */}
-          <div className="relative pl-5 sm:pl-8 lg:pl-12">
-            <div className="space-y-4">
-              <Reveal>
-                <MediaImage
-                  media={product.media[0]}
-                  isFixture={product.isFixture}
-                  className="aspect-[4/5] lg:aspect-auto lg:h-[80vh] w-full rounded-2xl lg:rounded-r-none"
-                  priority
-                />
-              </Reveal>
-              {product.media.length > 1 && (
-                <div className="grid grid-cols-4 gap-4">
-                  {product.media.slice(1).map((m, i) => (
-                    <Reveal key={i}>
-                      <MediaImage
-                        media={m}
-                        isFixture={product.isFixture}
-                        className="aspect-square rounded-2xl"
-                      />
-                    </Reveal>
-                  ))}
-                </div>
-              )}
-            </div>
+          <div className="relative pl-5 sm:pl-8 lg:pl-12 lg:sticky lg:top-24">
+            <ProductGallery media={product.media} isFixture={product.isFixture} />
           </div>
 
           {/* Details Column */}
-          <div className="px-5 sm:px-8 lg:px-0 lg:pr-24 lg:pt-12 pb-24 lg:pb-0">
+          <div className="px-5 sm:px-8 lg:px-0 lg:pr-12 lg:pt-4 pb-24 lg:pb-0">
             <Reveal>
               <h1 className="font-display text-4xl tracking-tight lg:text-6xl">
                 {product.name}
@@ -97,8 +76,9 @@ export default async function ProductPage({
               {/* Add to Cart - Desktop */}
               <div className="mt-12 hidden lg:block">
                 {product.priceMinor !== null && !product.isFixture ? (
-                  <div className="max-w-sm">
+                  <div className="flex flex-col gap-3">
                     <AddToCartButton productId={product.id} />
+                    <BuyNowButton productId={product.id} />
                   </div>
                 ) : (
                   <div className="rounded-2xl bg-mn-blush/50 p-6 text-center text-sm text-mn-ink-soft max-w-sm">

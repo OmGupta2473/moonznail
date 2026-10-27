@@ -7,6 +7,7 @@ import { DevelopmentBanner } from "@/components/catalogue/development-banner";
 import { getProducts, getLooks, getServices } from "@/lib/catalogue/queries";
 import { PlaceholderMedia } from "@/components/ui/placeholder-media";
 import { Reveal } from "@/components/ui/reveal";
+import { Carousel } from "@/components/ui/carousel";
 
 export const dynamic = "force-dynamic";
 export const metadata = { robots: { index: false, follow: false } };
@@ -27,8 +28,43 @@ export default async function HomePage() {
     <main id="main">
       {hasFixture && <DevelopmentBanner />}
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden pb-12 pt-8 lg:pb-24 lg:pt-12">
+      {/* NEW: Video Hero */}
+      <section className="relative w-full h-[calc(100svh-4rem)] lg:h-[calc(100svh-5rem)] overflow-hidden bg-mn-ink">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster="/images/hero-poster.jpg"
+          className="absolute inset-0 h-full w-full object-cover"
+        >
+          {/* Mobile Video (< 1024px) */}
+          <source src="/videos/hero-mobile.mp4" type="video/mp4" media="(max-width: 1023px)" />
+          {/* Desktop Video (>= 1024px) */}
+          <source src="/videos/hero-desktop.mp4" type="video/mp4" media="(min-width: 1024px)" />
+        </video>
+
+        {/* Dark overlay to ensure text/button readability */}
+        <div className="absolute inset-0 bg-mn-ink/30" aria-hidden="true" />
+
+        {/* Centered CTA - moved slightly down */}
+        <div className="absolute inset-0 flex items-center justify-center pt-24">
+          <div className="text-center animate-hero-text">
+            <h1 className="font-display text-[3.5rem] leading-none tracking-tight text-white mb-8 lg:text-[6rem]">
+              Nail art, <br className="sm:hidden" /> made by hand.
+            </h1>
+            <ButtonLink
+              href="/shop"
+              className="border border-white bg-transparent text-white hover:bg-white hover:text-mn-ink px-10 py-4 text-sm tracking-[0.1em] uppercase font-medium transition-colors"
+            >
+              Shop Now
+            </ButtonLink>
+          </div>
+        </div>
+      </section>
+
+      {/* Original Hero Section */}
+      <section className="relative overflow-hidden pb-10 pt-6 lg:pb-16 lg:pt-10">
         <Container>
           <div className="grid grid-cols-12 gap-6 lg:gap-8 items-center">
             <div className="col-span-12 lg:col-span-5 relative z-10">
@@ -66,55 +102,31 @@ export default async function HomePage() {
         </Container>
       </section>
 
-      {/* Products Section */}
+      {/* Products Carousel */}
       {products.length > 0 && (
-        <section className="border-t border-mn-border py-12 lg:py-24">
-          <Reveal>
-            <Container>
-              <div className="flex items-end justify-between gap-6">
-                <h2 className="font-display text-[1.625rem] leading-8 tracking-tight lg:text-[2.375rem] lg:leading-[2.75rem]">
-                  New and favourites
-                </h2>
-                <ButtonLink href="/shop" variant="ghost" className="hidden sm:inline-flex">
-                  View all
-                </ButtonLink>
-              </div>
-              <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-8">
-                {products.slice(0, 4).map((p) => (
-                  <ProductCardData key={p.id} product={p} />
-                ))}
-              </div>
-            </Container>
-          </Reveal>
+        <section className="border-t border-mn-border">
+          <Carousel title="New and Favourites" href="/shop">
+            {products.map((p) => (
+              <ProductCardData key={p.id} product={p} />
+            ))}
+          </Carousel>
         </section>
       )}
 
-      {/* Looks Section */}
+      {/* Looks Carousel */}
       {looks.length > 0 && (
-        <section className="border-t border-mn-border bg-mn-surface-3 py-12 lg:py-24">
-          <Reveal>
-            <Container>
-              <div className="flex items-end justify-between gap-6">
-                <h2 className="font-display text-[1.625rem] leading-8 tracking-tight lg:text-[2.375rem] lg:leading-[2.75rem]">
-                  Recent looks
-                </h2>
-                <ButtonLink href="/looks" variant="ghost" className="hidden sm:inline-flex">
-                  See all looks
-                </ButtonLink>
-              </div>
-              <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-8">
-                {looks.slice(0, 4).map((l) => (
-                  <LookCardData key={l.id} look={l} />
-                ))}
-              </div>
-            </Container>
-          </Reveal>
+        <section className="border-t border-mn-border bg-mn-surface-3">
+          <Carousel title="Recent Looks" href="/looks">
+            {looks.map((l) => (
+              <LookCardData key={l.id} look={l} />
+            ))}
+          </Carousel>
         </section>
       )}
 
       {/* Services Section */}
       {services.length > 0 && (
-        <section className="border-t border-mn-border py-12 lg:py-24">
+        <section className="border-t border-mn-border py-8 lg:py-16">
           <Reveal>
             <Container>
               <h2 className="font-display text-[1.625rem] leading-8 tracking-tight lg:text-[2.375rem] lg:leading-[2.75rem]">

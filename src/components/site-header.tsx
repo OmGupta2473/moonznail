@@ -12,19 +12,19 @@ const nav = [
 
 export function SiteHeader() {
   return (
-    <header className="border-b border-mn-border">
-      <Container className="flex h-16 items-center justify-between lg:h-20">
+    <header className="sticky top-0 z-50 w-full border-b border-mn-border bg-mn-canvas/95 backdrop-blur-sm">
+      <Container className="flex h-14 items-center justify-between lg:h-16">
         <Link
-          href="/design-preview"
+          href="/"
           className="flex items-center gap-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mn-rose-ink focus-visible:ring-offset-2 focus-visible:ring-offset-mn-canvas"
         >
-          <svg aria-hidden="true" viewBox="0 0 24 24" className="h-6 w-6 text-mn-moon" fill="none">
+          <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 text-mn-moon" fill="none">
             <path
               d="M16 4C10 5 6 10 7 16C8 20 12 22 17 21C13 19 11 14 13 9C14 7 15 5 16 4Z"
               fill="currentColor"
             />
           </svg>
-          <span className="font-display text-xl tracking-tight">MoonzNails</span>
+          <span className="font-display text-lg tracking-tight">MoonzNails</span>
         </Link>
 
         <nav aria-label="Primary" className="hidden items-center gap-8 lg:flex">

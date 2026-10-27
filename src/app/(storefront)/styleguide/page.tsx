@@ -8,6 +8,7 @@ import { ProductCard } from "@/components/ui/product-card";
 import { PlaceholderMedia } from "@/components/ui/placeholder-media";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import Link from "next/link";
 
 export const metadata = {
   robots: { index: false, follow: false },
@@ -99,9 +100,9 @@ export default function StyleguidePage() {
           <section className="mb-16">
             <h2 className="font-display text-2xl tracking-tight mb-6">ButtonLink — Specimens only</h2>
             <div className="flex flex-wrap gap-4">
-              <ButtonLink href="/design-preview" variant="primary">Primary</ButtonLink>
-              <ButtonLink href="/design-preview" variant="secondary">Secondary</ButtonLink>
-              <ButtonLink href="/design-preview" variant="ghost">Ghost</ButtonLink>
+              <ButtonLink href="/" variant="primary">Primary</ButtonLink>
+              <ButtonLink href="/" variant="secondary">Secondary</ButtonLink>
+              <ButtonLink href="/" variant="ghost">Ghost</ButtonLink>
             </div>
           </section>
 
@@ -172,9 +173,9 @@ export default function StyleguidePage() {
           <section className="mb-16">
             <h2 className="font-display text-2xl tracking-tight mb-6">Forced focus state — Specimen only</h2>
             <div className="flex flex-wrap gap-4">
-              <ButtonLink href="/design-preview" variant="primary" className="focus-visible:ring-2 focus-visible:ring-mn-rose-ink focus-visible:ring-offset-2 focus-visible:ring-offset-mn-canvas">Primary (focused)</ButtonLink>
-              <ButtonLink href="/design-preview" variant="secondary" className="focus-visible:ring-2 focus-visible:ring-mn-rose-ink focus-visible:ring-offset-2 focus-visible:ring-offset-mn-canvas">Secondary (focused)</ButtonLink>
-              <a href="/design-preview" className="inline-flex min-h-12 items-center justify-center rounded-full px-6 text-base font-medium text-mn-ink underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mn-rose-ink focus-visible:ring-offset-2 focus-visible:ring-offset-mn-canvas">Ghost (focused)</a>
+              <ButtonLink href="/" variant="primary" className="focus-visible:ring-2 focus-visible:ring-mn-rose-ink focus-visible:ring-offset-2 focus-visible:ring-offset-mn-canvas">Primary (focused)</ButtonLink>
+              <ButtonLink href="/" variant="secondary" className="focus-visible:ring-2 focus-visible:ring-mn-rose-ink focus-visible:ring-offset-2 focus-visible:ring-offset-mn-canvas">Secondary (focused)</ButtonLink>
+              <Link href="/" className="inline-flex min-h-12 items-center justify-center rounded-full px-6 text-base font-medium text-mn-ink underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mn-rose-ink focus-visible:ring-offset-2 focus-visible:ring-offset-mn-canvas">Ghost (focused)</Link>
             </div>
           </section>
         </Container>

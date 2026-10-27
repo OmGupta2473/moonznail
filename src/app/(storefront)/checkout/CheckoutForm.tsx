@@ -65,9 +65,9 @@ export function CheckoutForm({ cart }: { cart: CartView }) {
         Payment is not yet enabled. Your order will be recorded and I will contact you to arrange payment and shipping.
       </p>
 
-      <div className="mt-12 grid gap-12 lg:grid-cols-[1fr_380px] items-start">
+      <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_380px] items-start">
         {/* Left: Form */}
-        <form onSubmit={handleSubmit} noValidate className="space-y-8">
+        <form onSubmit={handleSubmit} noValidate className="space-y-6">
           <div className="space-y-6">
             <h2 className="font-display text-2xl border-b border-mn-border pb-2">Contact Information</h2>
             <div className="grid gap-4 sm:grid-cols-2">

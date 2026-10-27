@@ -16,10 +16,10 @@ export function PlaceholderPage({
         <h1 className="mt-4 font-display text-4xl tracking-tight">{title}</h1>
         <p className="mt-4 text-base leading-7 text-mn-ink-soft">{description}</p>
         <Link
-          href="/design-preview"
+          href="/"
           className="mt-8 inline-flex min-h-12 items-center justify-center rounded-full bg-mn-rose-deep px-6 text-base font-medium text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mn-rose-ink focus-visible:ring-offset-2 focus-visible:ring-offset-mn-canvas"
         >
-          Back to preview
+          Back to home
         </Link>
       </div>
     </main>

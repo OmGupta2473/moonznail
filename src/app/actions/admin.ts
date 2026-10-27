@@ -13,12 +13,10 @@ function getString(formData: FormData, key: string): string | null {
   if (value instanceof File) return null;
   return value.toString();
 }
-
-function getFile(formData: FormData, key: string): File | null {
-  const value = formData.get(key);
-  if (value instanceof File && value.size > 0) return value;
-  return null;
+function getFiles(formData: FormData, key: string): File[] {
+  return formData.getAll(key).filter((v) => v instanceof File && v.size > 0) as File[];
 }
+
 
 function getNumber(formData: FormData, key: string): number | null {
   const value = formData.get(key);
@@ -66,12 +64,12 @@ async function handleUpload(
   file: File,
   bucket: string = "product-media"
 ): Promise<string> {
-  const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+  const allowedTypes = ["image/jpeg", "image/png", "image/webp", "video/mp4"];
   if (!allowedTypes.includes(file.type)) {
-    throw new Error("Invalid file type. Only JPEG, PNG, and WebP are allowed.");
+    throw new Error("Invalid file type. Only JPEG, PNG, WebP, and MP4 are allowed.");
   }
-  if (file.size > 4 * 1024 * 1024) {
-    throw new Error("File size must be less than 4MB.");
+  if (file.size > 16 * 1024 * 1024) {
+    throw new Error("File size must be less than 16MB.");
   }
 
   const ext = file.name.split(".").pop()?.toLowerCase() || "webp";
@@ -122,12 +120,14 @@ export async function createUpdateProduct(formData: FormData): Promise<AdminResu
   const isPublished = getBoolean(formData, "is_published");
   const sortOrder = getNumber(formData, "sort_order") || 0;
 
-  const mediaFile = getFile(formData, "media");
-  let storagePath: string | null = null;
+  const mediaFiles = getFiles(formData, "media");
 
   try {
-    if (mediaFile) {
-      storagePath = await handleUpload(supabase, mediaFile);
+    // Upload all media files
+    const uploadedPaths: string[] = [];
+    for (const mediaFile of mediaFiles) {
+      const storagePath = await handleUpload(supabase, mediaFile);
+      uploadedPaths.push(storagePath);
     }
 
     if (isNew) {
@@ -148,15 +148,17 @@ export async function createUpdateProduct(formData: FormData): Promise<AdminResu
 
       if (error) throw error;
 
-      if (storagePath) {
+      // Insert all media files
+      for (let i = 0; i < uploadedPaths.length; i++) {
         const { error: mediaError } = await supabase.from("product_media").insert({
           product_id: validatedId,
-          storage_path: storagePath,
+          storage_path: uploadedPaths[i],
           alt_text: name,
-          sort_order: 0,
+          sort_order: i,
         });
         if (mediaError) {
-          await supabase.storage.from("product-media").remove([storagePath]);
+          // Clean up uploaded files
+          await supabase.storage.from("product-media").remove(uploadedPaths);
           throw mediaError;
         }
       }
@@ -177,26 +179,29 @@ export async function createUpdateProduct(formData: FormData): Promise<AdminResu
 
       if (error) throw error;
 
-      if (storagePath) {
+      // If new media files uploaded, add them
+      if (uploadedPaths.length > 0) {
+        // Get current max sort_order
         const { data: existingMedia } = await supabase
           .from("product_media")
-          .select("storage_path")
+          .select("sort_order")
           .eq("product_id", validatedId)
-          .eq("sort_order", 0)
+          .order("sort_order", { ascending: false })
+          .limit(1)
           .maybeSingle();
 
-        if (existingMedia) {
-          await supabase.storage.from("product-media").remove([existingMedia.storage_path]);
-          await supabase.from("product_media").update({ storage_path: storagePath }).eq("product_id", validatedId).eq("sort_order", 0);
-        } else {
+        let nextSortOrder = (existingMedia?.sort_order ?? -1) + 1;
+
+        for (const path of uploadedPaths) {
           const { error: mediaError } = await supabase.from("product_media").insert({
             product_id: validatedId,
-            storage_path: storagePath,
+            storage_path: path,
             alt_text: name,
-            sort_order: 0,
+            sort_order: nextSortOrder++,
           });
           if (mediaError) {
-            await supabase.storage.from("product-media").remove([storagePath]);
+            // Clean up
+            await supabase.storage.from("product-media").remove(uploadedPaths);
             throw mediaError;
           }
         }
@@ -251,12 +256,13 @@ export async function createUpdateLook(formData: FormData): Promise<AdminResult<
   const isPublished = getBoolean(formData, "is_published");
   const sortOrder = getNumber(formData, "sort_order") || 0;
 
-  const mediaFile = getFile(formData, "media");
-  let storagePath: string | null = null;
+  const mediaFiles = getFiles(formData, "media");
 
   try {
-    if (mediaFile) {
-      storagePath = await handleUpload(supabase, mediaFile);
+    const uploadedPaths: string[] = [];
+    for (const mediaFile of mediaFiles) {
+      const storagePath = await handleUpload(supabase, mediaFile);
+      uploadedPaths.push(storagePath);
     }
 
     if (isNew) {
@@ -273,15 +279,15 @@ export async function createUpdateLook(formData: FormData): Promise<AdminResult<
 
       if (error) throw error;
 
-      if (storagePath) {
+      for (let i = 0; i < uploadedPaths.length; i++) {
         const { error: mediaError } = await supabase.from("look_media").insert({
           look_id: validatedId,
-          storage_path: storagePath,
+          storage_path: uploadedPaths[i],
           alt_text: title,
-          sort_order: 0,
+          sort_order: i,
         });
         if (mediaError) {
-          await supabase.storage.from("product-media").remove([storagePath]);
+          await supabase.storage.from("product-media").remove(uploadedPaths);
           throw mediaError;
         }
       }
@@ -298,26 +304,26 @@ export async function createUpdateLook(formData: FormData): Promise<AdminResult<
 
       if (error) throw error;
 
-      if (storagePath) {
+      if (uploadedPaths.length > 0) {
         const { data: existingMedia } = await supabase
           .from("look_media")
-          .select("storage_path")
+          .select("sort_order")
           .eq("look_id", validatedId)
-          .eq("sort_order", 0)
+          .order("sort_order", { ascending: false })
+          .limit(1)
           .maybeSingle();
 
-        if (existingMedia) {
-          await supabase.storage.from("product-media").remove([existingMedia.storage_path]);
-          await supabase.from("look_media").update({ storage_path: storagePath }).eq("look_id", validatedId).eq("sort_order", 0);
-        } else {
+        let nextSortOrder = (existingMedia?.sort_order ?? -1) + 1;
+
+        for (const path of uploadedPaths) {
           const { error: mediaError } = await supabase.from("look_media").insert({
             look_id: validatedId,
-            storage_path: storagePath,
+            storage_path: path,
             alt_text: title,
-            sort_order: 0,
+            sort_order: nextSortOrder++,
           });
           if (mediaError) {
-            await supabase.storage.from("product-media").remove([storagePath]);
+            await supabase.storage.from("product-media").remove(uploadedPaths);
             throw mediaError;
           }
         }
@@ -458,7 +464,7 @@ export async function createUpdateCollection(formData: FormData): Promise<AdminR
 
   const description = getString(formData, "description")?.trim() || null;
   const isPublished = getBoolean(formData, "is_published");
-  const sortOrder = getNumber(formData, "sort_order") || 0;
+ const sortOrder = getNumber(formData, "sort_order") || 0;
 
   try {
     if (isNew) {

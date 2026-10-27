@@ -12,7 +12,7 @@ export default async function CheckoutPage() {
   if (cart.items.some((i) => i.status === "unavailable")) redirect("/cart");
 
   return (
-    <main id="main" className="py-12 lg:py-24">
+    <main id="main" className="py-8 lg:py-12">
       <Container>
         <CheckoutForm cart={cart} />
       </Container>

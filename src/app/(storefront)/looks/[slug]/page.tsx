@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { Container } from "@/components/ui/container";
 import { ButtonLink } from "@/components/ui/button-link";
-import { MediaImage } from "@/components/catalogue/media-image";
+import { ProductGallery } from "@/components/catalogue/product-gallery";
 import { ProductCardData } from "@/components/catalogue/product-card-data";
 import { ServiceCardData } from "@/components/catalogue/service-card-data";
 import { DevelopmentBannerInline } from "@/components/catalogue/development-banner-inline";
@@ -26,10 +26,9 @@ export async function generateMetadata({
 export default async function LookPage({
   params,
 }: {
-  params: Promise<{ slug: string | string[] }>;
+  params: Promise<{ slug: string }>;
 }) {
-  const paramsResolved = await params;
-  const slug = Array.isArray(paramsResolved.slug) ? paramsResolved.slug[0] : paramsResolved.slug;
+  const { slug } = await params;
   const look = await getLookBySlug(slug);
   if (!look) notFound();
 
@@ -47,16 +46,7 @@ export default async function LookPage({
           
           {/* Image Column - Bleeds right */}
           <div className="relative pl-5 sm:pl-8 lg:pl-12">
-            <Reveal>
-              <div className="aspect-[4/5] lg:aspect-auto lg:h-[80vh] w-full rounded-2xl lg:rounded-r-none overflow-hidden">
-                <MediaImage
-                  media={look.media[0]}
-                  isFixture={look.isFixture}
-                  className="h-full w-full object-cover"
-                  priority
-                />
-              </div>
-            </Reveal>
+            <ProductGallery media={look.media} isFixture={look.isFixture} />
           </div>
 
           {/* Details Column */}

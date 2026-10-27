@@ -18,7 +18,7 @@ export default async function LooksPage() {
   const rest = looks.slice(1);
 
   return (
-    <main id="main" className="py-12 lg:py-24">
+    <main id="main" className="py-8 lg:py-12">
       <Container>
         {hasFixture && <DevelopmentBannerInline />}
         
@@ -33,7 +33,7 @@ export default async function LooksPage() {
           <>
             {/* Featured Look */}
             {featured && (
-              <div className="mt-12 mb-16">
+              <div className="mt-8 mb-8 lg:mb-12">
                 <Reveal>
                   <div className="group relative rounded-3xl overflow-hidden aspect-[4/5] lg:aspect-[21/9]">
                     <MediaImage
@@ -59,7 +59,7 @@ export default async function LooksPage() {
             {/* Rest of the looks */}
             {rest.length > 0 && (
               <Reveal>
-                <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-12 lg:gap-x-8">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-8 lg:gap-x-6 lg:gap-y-12">
                   {rest.map((l) => (
                     <LookCardData key={l.id} look={l} />
                   ))}

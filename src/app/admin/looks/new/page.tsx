@@ -112,14 +112,15 @@ export default function NewLookPage() {
               type="file"
               id="media"
               name="media"
-              accept="image/jpeg,image/png,image/webp"
+              accept="image/jpeg,image/png,image/webp,video/mp4"
+              multiple
               className={cn(
                 "w-full rounded-xl border bg-mn-canvas px-4 py-3 text-base text-mn-ink",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mn-rose-ink focus-visible:ring-offset-2 focus-visible:ring-offset-mn-canvas",
                 "border-mn-border-strong file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-mn-blush file:text-mn-rose-deep"
               )}
             />
-            <p className="text-xs text-mn-ink-soft">JPEG, PNG, or WebP. Max 4MB.</p>
+            <p className="text-xs text-mn-ink-soft">Upload multiple images or an MP4. The first file will be the cover. Max 16MB each.</p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">

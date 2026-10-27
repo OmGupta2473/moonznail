@@ -8,31 +8,46 @@ import { cn } from "@/lib/cn";
 export function ProductCardData({ product, className }: { product: Product; className?: string }) {
   const price = formatPrice(product.priceMinor, product.currency);
   const meta = [product.shape, product.length].filter(Boolean).join(" · ");
+  const primaryMedia = product.media[0];
+  const isVideo = primaryMedia?.storagePath?.endsWith(".mp4");
 
   return (
     <Link
       href={`/products/${product.slug}`}
       className={cn(
-        "group block rounded-3xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mn-rose-ink focus-visible:ring-offset-2 focus-visible:ring-offset-mn-canvas",
+        "group block focus-visible:outline-none",
         className
       )}
     >
       <div className="relative">
-        <MediaImage
-          media={product.media[0]}
-          isFixture={product.isFixture}
-          className="aspect-[4/5] rounded-3xl shadow-1 motion-safe:transition-transform motion-safe:group-hover:-translate-y-1"
-        />
+        {isVideo ? (
+          <div className="aspect-[4/5] rounded-xl overflow-hidden bg-mn-blush">
+            <video
+              src={primaryMedia.storagePath!}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="h-full w-full object-cover"
+            />
+          </div>
+        ) : (
+          <MediaImage
+            media={primaryMedia}
+            isFixture={product.isFixture}
+            className="aspect-[4/5] rounded-xl shadow-rest motion-safe:transition-transform motion-safe:group-hover:-translate-y-1"
+          />
+        )}
         {product.isFixture && (
           <div className="absolute left-3 top-3">
             <FixtureBadge />
           </div>
         )}
       </div>
-      <div className="mt-4 space-y-1">
-        <h3 className="text-base font-medium leading-6">{product.name}</h3>
-        {meta && <p className="text-sm leading-5 text-mn-ink-soft">{meta}</p>}
-        <p className="text-base leading-6">{price ?? "Price on request"}</p>
+      <div className="mt-2 space-y-0.5">
+        <h3 className="text-[15px] font-medium leading-tight truncate">{product.name}</h3>
+        <p className="text-[13px] text-mn-ink-soft truncate">{meta}</p>
+        <p className="text-sm font-medium">{price ?? "Price on request"}</p>
       </div>
     </Link>
   );

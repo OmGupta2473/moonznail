@@ -46,14 +46,14 @@ export default async function ShopPage({
   const hasActiveFilters = Boolean(filters.shape || filters.length);
 
   return (
-    <main id="main" className="py-12 lg:py-24">
+    <main id="main" className="py-8 lg:py-12">
       <Container>
         {hasFixture && <DevelopmentBannerInline />}
         
         <h1 className="font-display text-4xl tracking-tight lg:text-5xl">Shop Sets</h1>
 
         {allProducts.length > 0 && (
-          <div className="mt-12 mb-16">
+          <div className="mt-8 mb-8 lg:mb-12">
             <Reveal>
               <div className="grid md:grid-cols-2 gap-8 items-center bg-mn-blush/30 p-6 sm:p-10 rounded-2xl">
                 <div className="aspect-[4/5] md:aspect-auto md:h-[50vh] relative rounded-xl overflow-hidden">
@@ -120,7 +120,7 @@ export default async function ShopPage({
             actionLabel="Clear filters"
           />
         ) : (
-          <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-12 lg:grid-cols-4 lg:gap-x-8">
+          <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6 lg:gap-y-12">
             {products.map((p) => (
               <ProductCardData key={p.id} product={p} />
             ))}
