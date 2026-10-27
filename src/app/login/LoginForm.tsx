@@ -1,85 +1,65 @@
 "use client";
 
-import { useState, FormEvent } from "react";
-import { signInWithOtp } from "@/app/actions/auth";
-import { cn } from "@/lib/cn";
+import { useState, useTransition } from "react";
+import { signInWithPassword } from "@/app/actions/auth";
 
 export function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "pending" | "success" | "error">("idle");
-  const [message, setMessage] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [pending, startTransition] = useTransition();
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setStatus("pending");
-    setMessage("");
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    // THIS IS THE CRITICAL LINE: It stops the password from going into the URL.
+    e.preventDefault(); 
+    
+    setError(null);
+    const formData = new FormData(e.currentTarget);
 
-    const formData = new FormData();
-    formData.append("email", email);
-
-    const result = await signInWithOtp(formData);
-
-    if (result.success) {
-      setStatus("success");
-      setMessage("Check your email for the login link.");
-    } else {
-      setStatus("error");
-      setMessage(result.error || "Something went wrong. Please try again.");
-    }
-  }
-
-  if (status === "success") {
-    return (
-      <div className="text-center">
-        <div className="mx-auto mt-8 w-16 h-16 rounded-full bg-mn-success/10 flex items-center justify-center">
-          <svg className="h-8 w-8 text-mn-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
-        </div>
-        <p className="mt-6 text-base leading-7 text-mn-ink">{message}</p>
-      </div>
-    );
+    startTransition(async () => {
+      const result = await signInWithPassword(formData);
+      if (result?.error) {
+        setError(result.error);
+      }
+    });
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium text-mn-ink">
-          Email address
-        </label>
+    <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+      <div className="space-y-2">
+        <label htmlFor="email" className="block text-sm font-medium text-mn-ink">Email</label>
         <input
           id="email"
           name="email"
           type="email"
-          autoComplete="email"
           required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          disabled={status === "pending"}
-          className={cn(
-            "mt-2 w-full rounded-xl border bg-mn-canvas px-4 py-3 text-base text-mn-ink placeholder:text-mn-ink-soft/70",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mn-rose-ink focus-visible:ring-offset-2 focus-visible:ring-offset-mn-canvas",
-            "disabled:cursor-not-allowed disabled:opacity-45",
-            status === "error" ? "border-mn-error" : "border-mn-border-strong"
-          )}
-          placeholder="you@example.com"
+          autoComplete="email"
+          className="h-12 w-full rounded-xl border border-mn-border-strong bg-mn-canvas px-4 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mn-rose-ink"
         />
-        {status === "error" && (
-          <p className="mt-2 text-sm text-mn-error" role="alert">{message}</p>
-        )}
       </div>
+
+      <div className="space-y-2">
+        <label htmlFor="password" className="block text-sm font-medium text-mn-ink">Password</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          required
+          autoComplete="current-password"
+          className="h-12 w-full rounded-xl border border-mn-border-strong bg-mn-canvas px-4 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mn-rose-ink"
+        />
+      </div>
+
+      {error && (
+        <p role="alert" className="rounded-lg bg-mn-error/10 px-3 py-2 text-sm text-mn-error">
+          {error}
+        </p>
+      )}
 
       <button
         type="submit"
-        disabled={status === "pending"}
-        className={cn(
-          "w-full min-h-12 rounded-full bg-mn-rose-deep px-6 text-base font-medium text-white",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mn-rose-ink focus-visible:ring-offset-2 focus-visible:ring-offset-mn-canvas",
-          "disabled:cursor-not-allowed disabled:opacity-45",
-          "motion-safe:transition-transform motion-safe:active:scale-[0.98]"
-        )}
+        disabled={pending}
+        className="flex h-12 w-full items-center justify-center rounded-full bg-mn-rose-deep px-6 font-medium text-white transition-colors hover:bg-mn-rose-ink disabled:opacity-60"
       >
-        {status === "pending" ? "Sending..." : "Send Magic Link"}
+        {pending ? "Signing in…" : "Sign In"}
       </button>
     </form>
   );
