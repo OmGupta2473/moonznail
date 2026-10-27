@@ -6,7 +6,7 @@ import { getServices } from "@/lib/catalogue/queries";
 import { formatPrice, formatDuration } from "@/lib/format";
 import { Reveal } from "@/components/ui/reveal";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 export const metadata = { robots: { index: false, follow: false } };
 
 export default async function ServicesPage() {

@@ -8,7 +8,7 @@ import { BuyNowButton } from "@/components/cart/buy-now-button";
 import { ProductGallery } from "@/components/catalogue/product-gallery";
 import { Reveal } from "@/components/ui/reveal";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,

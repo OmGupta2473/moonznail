@@ -6,7 +6,7 @@ import { formatPrice, formatDuration } from "@/lib/format";
 import { getServiceBySlug } from "@/lib/catalogue/queries";
 import { Reveal } from "@/components/ui/reveal";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,

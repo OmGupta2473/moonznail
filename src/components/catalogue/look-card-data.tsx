@@ -11,6 +11,7 @@ export function LookCardData({ look, className }: { look: Look; className?: stri
   return (
     <Link
       href={`/looks/${look.slug}`}
+      prefetch
       className={cn(
         "group block focus-visible:outline-none",
         className

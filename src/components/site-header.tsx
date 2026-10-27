@@ -16,6 +16,7 @@ export function SiteHeader() {
       <Container className="flex h-14 items-center justify-between lg:h-16">
         <Link
           href="/"
+          prefetch
           className="flex items-center gap-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mn-rose-ink focus-visible:ring-offset-2 focus-visible:ring-offset-mn-canvas"
         >
           <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 text-mn-moon" fill="none">
@@ -32,6 +33,7 @@ export function SiteHeader() {
             <Link
               key={item.href}
               href={item.href}
+              prefetch
               className="text-sm font-medium text-mn-ink underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mn-rose-ink focus-visible:ring-offset-2 focus-visible:ring-offset-mn-canvas"
             >
               {item.label}

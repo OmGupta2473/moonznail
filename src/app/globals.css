@@ -129,6 +129,23 @@
   }
 }
 
+@keyframes carousel-fade {
+  0%   { opacity: 0; }
+  10%  { opacity: 1; }
+  33%  { opacity: 1; }
+  43%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+.animate-carousel-fade {
+  animation: carousel-fade 12s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-carousel-fade { animation: none; }
+  .animate-carousel-fade:first-child { opacity: 1; }
+}
+
 /* Directional slide animations */
 @keyframes slide-in-right {
   from { opacity: 0; transform: translateX(20px); }

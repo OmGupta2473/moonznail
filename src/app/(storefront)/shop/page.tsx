@@ -10,7 +10,7 @@ import { ButtonLink } from "@/components/ui/button-link";
 import Link from "next/link";
 import { cn } from "@/lib/cn";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 export const metadata = { robots: { index: false, follow: false } };
 
 function first(v: string | string[] | undefined): string | undefined {

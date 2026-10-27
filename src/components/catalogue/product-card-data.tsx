@@ -14,7 +14,7 @@ export function ProductCardData({ product, className }: { product: Product; clas
 
   return (
     <div className={cn("group relative", className)}>
-      <Link href={`/products/${product.slug}`} className="block relative">
+      <Link href={`/products/${product.slug}`} prefetch className="block relative">
         <div className="relative">
           {isVideo ? (
             <div className="aspect-[4/5] rounded-lg overflow-hidden bg-mn-blush">

@@ -8,7 +8,7 @@ import { DevelopmentBannerInline } from "@/components/catalogue/development-bann
 import { Reveal } from "@/components/ui/reveal";
 import { getLookBySlug } from "@/lib/catalogue/queries";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,

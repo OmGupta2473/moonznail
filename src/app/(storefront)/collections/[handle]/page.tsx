@@ -5,7 +5,7 @@ import { EmptyState } from "@/components/catalogue/empty-state";
 import { DevelopmentBannerInline } from "@/components/catalogue/development-banner-inline";
 import { getCollectionByHandle } from "@/lib/catalogue/queries";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export async function generateMetadata({
   params,
