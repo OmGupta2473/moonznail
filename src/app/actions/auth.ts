@@ -3,32 +3,30 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
-export async function signInWithOtp(formData: FormData) {
+export async function signInWithPassword(formData: FormData) {
   const email = formData.get("email")?.toString().trim();
+  const password = formData.get("password")?.toString();
 
-  if (!email || !email.includes("@")) {
-    return { error: "Please enter a valid email address." };
+  if (!email || !password) {
+    return { error: "Email and password are required." };
   }
 
   const supabase = await createServerSupabaseClient();
-  const origin = "http://localhost:3000";
-
-  const { error } = await supabase.auth.signInWithOtp({
+  const { error } = await supabase.auth.signInWithPassword({
     email,
-    options: {
-      emailRedirectTo: `${origin}/auth/callback`,
-    },
+    password,
   });
 
   if (error) {
-    return { error: "Unable to send magic link. Please try again." };
+    return { error: "Invalid email or password." };
   }
 
-  return { success: true };
+  // Session is set via cookies, redirect to pending (which checks is_owner)
+redirect("/admin");
 }
 
 export async function signOut() {
   const supabase = await createServerSupabaseClient();
   await supabase.auth.signOut();
-  redirect("/");
+  redirect("/login");
 }

@@ -2,12 +2,12 @@ import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const code = searchParams.get("code");
-  const origin = "http://localhost:3000";
+  const requestUrl = new URL(request.url);
+  const code = requestUrl.searchParams.get("code");
+  const origin = requestUrl.origin;
 
   if (!code) {
-    return NextResponse.redirect(new URL("/login?error=InvalidLink", origin));
+    return NextResponse.redirect(`${origin}/login?error=MissingCode`);
   }
 
   const supabase = await createServerSupabaseClient();
@@ -15,8 +15,10 @@ export async function GET(request: NextRequest) {
   const { error } = await supabase.auth.exchangeCodeForSession(code);
 
   if (error) {
-    return NextResponse.redirect(new URL("/login?error=InvalidLink", origin));
+    console.error("Auth exchange failed:", error.message);
+    // If the code was already used, or the cookie is missing, it lands here
+    return NextResponse.redirect(`${origin}/login?error=InvalidLink`);
   }
 
-  return NextResponse.redirect(new URL("/pending", origin));
+  return NextResponse.redirect(`${origin}/pending`);
 }

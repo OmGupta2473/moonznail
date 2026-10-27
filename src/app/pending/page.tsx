@@ -10,12 +10,21 @@ export const metadata = {
 
 export default async function PendingPage() {
   const supabase = await createServerSupabaseClient();
+  
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   if (!user) {
     redirect("/login");
+  }
+
+  // Check if the user is an owner
+  const { data: isOwner } = await supabase.rpc("is_owner");
+
+  // If they are an owner, send them straight to the dashboard
+  if (isOwner) {
+    redirect("/admin");
   }
 
   return (
@@ -26,8 +35,8 @@ export default async function PendingPage() {
         </p>
         <h1 className="mt-4 font-display text-4xl tracking-tight">Access Pending</h1>
         <p className="mt-4 max-w-md text-base leading-7 text-mn-ink-soft">
-          You are logged in as <strong>{user.email}</strong>. However, owner
-          authorization has not yet been configured.
+          You are logged in as <strong>{user.email}</strong>. However, you do not have owner access.
+          Please contact the administrator.
         </p>
         <form action={signOut} className="mt-8">
           <ButtonLink href="/" variant="secondary">
